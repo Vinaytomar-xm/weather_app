@@ -1,48 +1,128 @@
+const searchInput = document.querySelector("#city");
+const searchBtn = document.querySelector("#searchBtn");
 
-const searchInput = document.querySelector('#city')
-const searchBtn = document.querySelector('#searchBtn')
-const temp = document.querySelector('#temp')
-const city = document.querySelector('#cityName')
-const condition = document.querySelector('#condition')
-const humidity = document.querySelector('#humidity')
-const wind = document.getElementById('wind')
+const temp = document.querySelector("#temp");
+const cityName = document.querySelector("#cityName");
+const condition = document.querySelector("#condition");
+const humidity = document.querySelector("#humidity");
+const wind = document.querySelector("#wind");
+
+const icon = document.querySelector("#icon");
+const status = document.querySelector("#status");
 
 
-searchBtn.addEventListener('click', async function () {
-    const value = searchInput.value
+async function getWeather(city) {
 
-    if (value === '') {
-        alert('Please enter a city name')
-        return
-    }
-
-    searchBtn.disabled = true;
-    searchBtn.textContent = "Loading...";
-
-    API_KEY = 'YOUR_API_KEY'
     try {
 
-        const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${value}&aqi=yes`)
+        setLoading(true);
 
-        if (!response.ok) {
-            throw new Error('City not found')
+        status.textContent = "Fetching weather data...";
+
+        const response = await fetch(
+            `/api/weather?city=${encodeURIComponent(city)}`
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message || "Unable to fetch weather data"
+            );
         }
 
-        const data = await response.json()
+        updateWeather(result.data);
 
-        temp.textContent = `${data.current.temp_c}°C`
-        city.textContent = `${data.location.name} , ${data.location.region} - ${data.location.country}`
-        humidity.textContent = `${data.current.humidity} %`
-        wind.textContent = `${data.current.wind_kph} km/h`
+        status.textContent = "";
 
     } catch (error) {
-        alert('Error fetching weather data')
+
+        console.error("Weather Error:", error);
+
+        status.textContent =
+            error.message || "Something went wrong";
+
     } finally {
-        searchBtn.disabled = false;
-        searchBtn.textContent = "Search";
-        searchInput.value = ''
+
+        setLoading(false);
+
+    }
+}
+
+
+function updateWeather(data) {
+
+    const location = data.location;
+    const current = data.current;
+
+
+    temp.textContent =
+        `${current.temp_c}°C`;
+
+
+    cityName.textContent =
+        `${location.name}, ${location.country}`;
+
+
+    condition.textContent =
+        current.condition.text;
+
+
+    humidity.textContent =
+        `${current.humidity}%`;
+
+
+    wind.textContent =
+        `${current.wind_kph} km/h`;
+
+
+    icon.src =
+        `https:${current.condition.icon}`;
+
+
+    icon.alt =
+        current.condition.text;
+
+
+    icon.hidden = false;
+}
+
+
+function setLoading(isLoading) {
+
+    searchBtn.disabled = isLoading;
+
+    searchBtn.textContent =
+        isLoading ? "Loading..." : "Search";
+
+}
+
+
+searchBtn.addEventListener("click", () => {
+
+    const city = searchInput.value.trim();
+
+    if (!city) {
+
+        status.textContent =
+            "Please enter a city name.";
+
+        searchInput.focus();
+
+        return;
     }
 
-})
+    getWeather(city);
+
+});
 
 
+searchInput.addEventListener("keydown", (event) => {
+
+    if (event.key === "Enter") {
+
+        searchBtn.click();
+
+    }
+
+});
