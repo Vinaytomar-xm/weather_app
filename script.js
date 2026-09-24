@@ -19,8 +19,7 @@ searchBtn.addEventListener('click', async function () {
     searchBtn.disabled = true;
     searchBtn.textContent = "Loading...";
 
-//   923fb74ce5b647fd815141348260208&
-
+    API_KEY = 'YOUR_API_KEY'
     try {
 
         const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${value}&aqi=yes`)
