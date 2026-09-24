@@ -126,3 +126,7 @@ searchInput.addEventListener("keydown", (event) => {
     }
 
 });
+
+const year = document.getElementById("year");
+const currentYear = new Date().getFullYear();
+year.textContent = currentYear;
