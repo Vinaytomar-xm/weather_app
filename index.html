@@ -3,333 +3,428 @@
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description"
-        content="Climate Mausam - Check current weather conditions, temperature, humidity and wind speed for any city.">
-
-    <title>Climate Mausam | Weather App</title>
+    <title>Climate Mausam</title>
 
     <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --input: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --navbar: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --border: #334155;
+            --input: #0f172a;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --navbar: #1e293b;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
         }
 
         body {
             min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s ease, color 0.3s ease;
+
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #74ebd5, #9face6);
+            flex-direction: column;
         }
 
-        .container {
+        /* Navbar */
+
+        .navbar {
             width: 100%;
-            max-width: 430px;
-            padding: 30px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.94);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+            background: var(--navbar);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 10px var(--shadow);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 16px 7%;
+            transition: background 0.3s ease;
         }
 
-        .header {
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        #themeBtn {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid var(--border);
+            border-radius: 50%;
+
+            background: var(--card);
+            color: var(--text);
+
+            cursor: pointer;
+
+            transition: all 0.25s ease;
+        }
+
+        #themeBtn:hover {
+            border-color: aqua;
+        }
+
+        #themeBtn svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.5s ease;
+        }
+
+        #themeBtn:hover svg {
+            transform: rotate(360deg);
+        }
+
+        /* Default = Light Mode */
+        .sun-icon {
+            display: none;
+        }
+
+        .moon-icon {
+            display: block;
+        }
+
+        /* Dark Mode */
+        body.dark .moon-icon {
+            display: none;
+        }
+
+        body.dark .sun-icon {
+            display: block;
+        }
+
+        /* Main */
+
+        main {
+            width: 100%;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 0 20px;
+
+            flex: 1;
+        }
+
+        .hero {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
-        .header h1 {
-            font-size: clamp(26px, 7vw, 32px);
-            color: #222;
+        .hero h1 {
+            font-size: 36px;
             margin-bottom: 8px;
         }
 
-        .header p {
-            color: #666;
-            font-size: 14px;
+        .hero p {
+            color: var(--muted);
+            font-size: 16px;
         }
+
+        /* Search */
 
         .search-box {
             display: flex;
             gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .search-box input {
+        #city {
             flex: 1;
-            min-width: 0;
-            width: 100%;
-            padding: 13px 15px;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+
+            border: 1px solid var(--border);
             border-radius: 10px;
+
+            background: var(--input);
+            color: var(--text);
+
+            font-size: 16px;
             outline: none;
-            font-size: 15px;
         }
 
-        .search-box input:focus {
-            border-color: #2196f3;
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.12);
+        #city:focus {
+            border-color: var(--primary);
         }
 
-        .search-box button {
-            padding: 13px 18px;
+        #searchBtn {
+            padding: 14px 22px;
+
             border: none;
             border-radius: 10px;
-            background: #2196f3;
+
+            background: var(--primary);
             color: white;
-            font-size: 15px;
+
+            font-size: 16px;
             font-weight: 600;
+
             cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
+            transition: 0.2s ease;
         }
 
-        .search-box button:hover {
-            background: #1976d2;
+        #searchBtn:hover {
+            background: var(--primary-hover);
         }
 
-        .search-box button:disabled {
+        #searchBtn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
         }
 
-        .status {
+        #status {
             min-height: 24px;
-            margin-top: 15px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-        }
+            margin: 8px 0 20px;
 
-        .weather {
-            margin-top: 15px;
+            color: var(--muted);
             text-align: center;
         }
 
-        .weather-icon {
-            width: 110px;
-            height: 110px;
-            object-fit: contain;
+        /* Weather Card */
+
+        .weather-card {
+            background: var(--card);
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow: 0 10px 30px var(--shadow);
+
+            text-align: center;
+
+            transition: background 0.3s ease;
         }
 
-        .temperature {
-            margin-top: 5px;
-            font-size: clamp(38px, 11vw, 48px);
+        #icon {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 5px;
+        }
+
+        #temp {
+            font-size: 48px;
             font-weight: 700;
-            color: #222;
+            margin-bottom: 5px;
         }
 
-        .city-name {
-            margin-top: 8px;
-            font-size: clamp(18px, 5vw, 21px);
-            color: #333;
-            word-break: break-word;
-        }
-
-        .condition {
-            margin-top: 6px;
-            color: #666;
-            font-size: 15px;
-        }
-
-        .info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 25px;
-        }
-
-        .card {
-            padding: 18px 12px;
-            border-radius: 14px;
-            background: #f5f7fa;
-            border: 1px solid #e8ebef;
-        }
-
-        .card h3 {
+        #cityName {
+            font-size: 22px;
             margin-bottom: 8px;
+        }
+
+        #condition {
+            color: var(--muted);
+            font-size: 17px;
+            margin-bottom: 25px;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .detail {
+            padding: 18px;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
+
+            background: var(--bg);
+        }
+
+        .detail span {
+            display: block;
+            color: var(--muted);
             font-size: 14px;
-            color: #777;
-            font-weight: 500;
+            margin-bottom: 5px;
         }
 
-        .card p {
+        .detail strong {
             font-size: 18px;
+        }
+
+        /* Footer */
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
             font-weight: 600;
-            color: #222;
-        }
 
-        .footer {
-            margin-top: 25px;
-            text-align: center;
-        }
-
-        .footer p {
-            font-size: 11px;
-            color: #999;
-            letter-spacing: 0.3px;
-        }
-
-        .footer {
-            margin-top: 25px;
-            text-align: center;
-        }
-
-        .footer p {
-            font-size: 11px;
-            color: #999;
-            letter-spacing: 0.3px;
-        }
-
-        #footerDate {
-            margin-bottom: 4px;
-        }
-
-        /* Tablet */
-        @media (max-width: 600px) {
-            body {
-                padding: 15px;
-            }
-
-            .container {
-                padding: 25px 20px;
-            }
+            color: var(--muted);
+            border-top: 1px solid var(--border);
         }
 
         /* Mobile */
-        @media (max-width: 420px) {
-            body {
-                padding: 12px;
-                align-items: center;
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 14px 20px;
             }
 
-            .container {
-                padding: 22px 16px;
-                border-radius: 16px;
+            .nav-brand {
+                font-size: 19px;
             }
 
-            .search-box {
-                gap: 8px;
+            main {
+                margin: 35px auto;
             }
 
-            .search-box input {
-                padding: 12px;
-                font-size: 14px;
+            .hero h1 {
+                font-size: 30px;
             }
 
-            .search-box button {
-                padding: 12px 14px;
-                font-size: 14px;
-            }
-
-            .weather-icon {
-                width: 95px;
-                height: 95px;
-            }
-
-            .info {
-                gap: 8px;
-            }
-
-            .card {
-                padding: 15px 8px;
-            }
-
-            .card p {
-                font-size: 16px;
-            }
-        }
-
-        /* Very small phones */
-        @media (max-width: 320px) {
             .search-box {
                 flex-direction: column;
             }
 
-            .search-box button {
+            #searchBtn {
                 width: 100%;
             }
 
-            .container {
-                padding: 20px 14px;
+            .weather-card {
+                padding: 22px;
             }
+
+            #temp {
+                font-size: 42px;
+            }
+
+            .weather-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #year {
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
 
-    <main class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            Climate Mausam
+        </div>
 
-        <header class="header">
-            <h1>Climate Mausam</h1>
-            <p>Check current weather of any city</p>
-        </header>
+        <button id="themeBtn" aria-label="Switch to dark mode" title="Switch to dark mode">
+            <!-- Moon -->
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3
+                 7 7 0 0 0 21 12.79Z" />
+            </svg>
+
+            <!-- Sun -->
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4" />
+
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+            </svg>
+        </button>
+    </nav>
 
 
+    <!-- Main -->
+    <main>
+
+        <section class="hero">
+            <h1>Weather Updates</h1>
+            <p>Search any city and get the latest weather information.</p>
+        </section>
+
+
+        <!-- Search -->
         <div class="search-box">
+            <input type="text" id="city" placeholder="Enter city name..." autocomplete="off">
 
-            <input type="text" id="city" placeholder="Enter city name" autocomplete="off" maxlength="100">
-
-            <button id="searchBtn" type="button">
+            <button id="searchBtn">
                 Search
             </button>
-
         </div>
 
 
-        <div id="status" class="status" aria-live="polite"></div>
+        <p id="status"></p>
 
 
-        <section class="weather" aria-live="polite">
+        <!-- Weather Card -->
+        <section class="weather-card">
 
-            <img id="icon" class="weather-icon" src="" alt="Weather condition" hidden>
+            <img id="icon" src="" alt="Weather condition" hidden>
 
-            <h2 id="temp" class="temperature">
-                --°C
-            </h2>
+            <h2 id="temp">--°C</h2>
 
-            <h3 id="cityName" class="city-name">
-                Search for a city
-            </h3>
+            <h3 id="cityName">Search for a city</h3>
 
-            <p id="condition" class="condition">
-                Weather condition
-            </p>
+            <p id="condition">Weather information will appear here</p>
 
 
-            <div class="info">
+            <div class="weather-details">
 
-                <div class="card">
-                    <h3>Humidity</h3>
-
-                    <p id="humidity">
-                        -- %
-                    </p>
+                <div class="detail">
+                    <span>💧 Humidity</span>
+                    <strong id="humidity">--</strong>
                 </div>
 
-
-                <div class="card">
-                    <h3>Wind</h3>
-
-                    <p id="wind">
-                        -- km/h
-                    </p>
+                <div class="detail">
+                    <span>💨 Wind</span>
+                    <strong id="wind">--</strong>
                 </div>
 
             </div>
 
         </section>
 
-
-        <footer class="footer">
-            <p>© <span id="year"></span> Made by Vinay Singh Tomar</p>
-        </footer>
-
     </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            © <span id="year"></span> Made by Vinay Singh Tomar
+        </p>
+    </footer>
 
 
     <script src="script.js"></script>

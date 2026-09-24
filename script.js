@@ -11,10 +11,12 @@ const icon = document.querySelector("#icon");
 const status = document.querySelector("#status");
 
 
+// =========================
+// WEATHER
+// =========================
+
 async function getWeather(city) {
-
     try {
-
         setLoading(true);
 
         status.textContent = "Fetching weather data...";
@@ -45,7 +47,6 @@ async function getWeather(city) {
     } finally {
 
         setLoading(false);
-
     }
 }
 
@@ -55,34 +56,25 @@ function updateWeather(data) {
     const location = data.location;
     const current = data.current;
 
-
-    temp.textContent =
-        `${current.temp_c}°C`;
-
+    temp.textContent = `${current.temp_c}°C`;
 
     cityName.textContent =
         `${location.name}, ${location.country}`;
 
-
     condition.textContent =
         current.condition.text;
-
 
     humidity.textContent =
         `${current.humidity}%`;
 
-
     wind.textContent =
         `${current.wind_kph} km/h`;
-
 
     icon.src =
         `https:${current.condition.icon}`;
 
-
     icon.alt =
         current.condition.text;
-
 
     icon.hidden = false;
 }
@@ -94,9 +86,10 @@ function setLoading(isLoading) {
 
     searchBtn.textContent =
         isLoading ? "Loading..." : "Search";
-
 }
 
+
+// Search button
 
 searchBtn.addEventListener("click", () => {
 
@@ -113,20 +106,79 @@ searchBtn.addEventListener("click", () => {
     }
 
     getWeather(city);
-
 });
 
+
+// Enter key
 
 searchInput.addEventListener("keydown", (event) => {
 
     if (event.key === "Enter") {
-
         searchBtn.click();
-
     }
 
 });
 
-const year = document.getElementById("year");
-const currentYear = new Date().getFullYear();
-year.textContent = currentYear;
+
+// =========================
+// DARK MODE
+// =========================
+
+const themeBtn = document.querySelector("#themeBtn");
+
+
+function applyTheme(theme) {
+    document.body.classList.toggle(
+        "dark",
+        theme === "dark"
+    );
+
+    const isDark = theme === "dark";
+
+    themeBtn.setAttribute(
+        "aria-label",
+        isDark
+            ? "Switch to light mode"
+            : "Switch to dark mode"
+    );
+
+    themeBtn.setAttribute(
+        "title",
+        isDark
+            ? "Switch to light mode"
+            : "Switch to dark mode"
+    );
+}
+
+// Saved theme
+
+const savedTheme =
+    localStorage.getItem("theme") || "light";
+
+applyTheme(savedTheme);
+
+
+// Toggle theme
+
+themeBtn.addEventListener("click", () => {
+
+    const newTheme =
+        document.body.classList.contains("dark")
+            ? "light"
+            : "dark";
+
+    localStorage.setItem(
+        "theme",
+        newTheme
+    );
+
+    applyTheme(newTheme);
+});
+
+
+// =========================
+// FOOTER YEAR
+// =========================
+
+document.querySelector("#year").textContent =
+    new Date().getFullYear();
